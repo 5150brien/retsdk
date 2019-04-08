@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<RETS ReplyCode="0" ReplyText="Operation Success.">
+    <COUNT Records="2936" />
+    <DELIMITER value = "09"/>
+    <COLUMNS>\tsysid\t</COLUMNS>
+    <DATA>\t30000001\t</DATA>
+    <DATA>\t30000002\t</DATA>
+    <DATA>\t30000003\t</DATA>
+    <DATA>\t30000004\t</DATA>
+    <DATA>\t30000005\t</DATA>
+    <DATA>\t30000006\t</DATA>
+    <DATA>\t30000007\t</DATA>
+    <DATA>\t30000008\t</DATA>
+    <DATA>\t30000009\t</DATA>
+    <DATA>\t30000010\t</DATA>
+</RETS>

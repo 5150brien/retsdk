@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<RETS ReplyCode="0" ReplyText="Operation Success.">
+    <RETS-RESPONSE>\r\nMemberName=\r\nUser=LasloPanaflex,NULL,NULL,TestPassword\r\nBroker=\r\nMetadataVersion=1.00.00001\r\nMetadataTimestamp=2013-03-27T14:31:31Z\r\nMinMetadataTimestamp=2013-03-27T14:31:31Z\r\nLogin=https://rets.somemls.com/rets/Login.ashx\r\nLogout=https://rets.somemls.com/rets/Logout.ashx\r\nSearch=https://rets.somemls.com/rets/Search.ashx\r\nGetMetadata=https://rets.somemls.com/rets/GetMetadata.ashx\r\nGetObject=https://rets.somemls.com/rets/GetObject.ashx\r\nUpdate=https://rets.somemls.com/rets/Update.ashx\r\nPostObject=https://rets.somemls.com/rets/PostObject.ashx\r\n</RETS-RESPONSE>
+</RETS>

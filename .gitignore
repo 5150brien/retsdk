@@ -1,0 +1,38 @@
+# Python
+*.pyc
+*.pyo
+__pycache__
+
+# Virtualenv
+env/
+.env/
+.env
+venv/
+.venv/
+.env
+.venv
+p2_7
+
+# Distro/Build/Packaging
+.Python
+build/
+develop-eggs/
+dist/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pep.sh
+play.py
+out.txt
+out.py
