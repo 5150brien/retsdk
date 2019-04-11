@@ -126,7 +126,7 @@ class RETSConnection(object):
         response = self.__get_metadata(encoded_parameters)
         return response
 
-    def get_table_metadata(self, resource='Property', class_='Listing'):
+    def get_table_metadata(self, resource='Property', _class='Listing'):
         """
         Gets the detailed field metadata for a specific class
 
@@ -190,7 +190,7 @@ class RETSConnection(object):
         else:
             url = self.get_metadata_url + '?' + parameters
             metadata_request = request.Request(url, headers=self.headers)
-            response = self.make_request(metadata_request)[1]
+            response = self.__make_request(metadata_request)[1]
 
             return response
 
@@ -392,7 +392,7 @@ class RETSConnection(object):
 
             if content_type == 'text/xml; charset=utf-8':
                 xml = ET.fromstring(payload)
-                response = self.parse_response(xml)
+                response = parse_response(xml)
             elif content_type == 'image/jpeg':
                 response = dict()
                 response['ok'] = True
