@@ -366,7 +366,7 @@ class RETSConnection(object):
                                                             file=sys.stdout)
                     time.sleep(60)
 
-            if not successful_query:
+            if not success:
                 raise RequestError('The RETS request could not be completed')
 
             return response
