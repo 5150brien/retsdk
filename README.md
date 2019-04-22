@@ -253,3 +253,97 @@ Exception Name | Meaning
 retsdk.exceptions.AuthenticationError | Raised when an unsupported authentication type is specified by the auth_type parameter
 retsdk.exceptions.RequestError | Raised if authentication fails because of invalid account credentials or an incorrect login URL
 
+### Downloading Data from a RETS server
+
+Download data or search through records using the RETSConnection's get_data() method. Generally, you will want to examine the system metadata first so that you can see what fields are available (both to download and to query). The fields parameter accepts a list of fields to be downloaded for each record that matches the query.
+
+```python
+# A RETS query (DMQL)
+rets_query = "(PropertyType=SFD)"
+
+# A list of fields that should be downloaded for each record
+fields_to_be_downloaded = ["MLSNumber", "Price"]
+
+data = rets.get_data(
+    resource='Property',
+    class_name='Property',
+    query=query,
+    fields=fields_to_be_downloaded,
+)
+
+print(data)
+# {'more_rows': False,
+#  'ok': True,
+#  'record_count': '10',
+#  'reply_code': '0',
+#  'reply_text': 'Operation Success.',
+#  'rows': [{'Price': 199000.0, 'MLSNumber': 'MLS0000001'},
+#           {'Price': 2500000.0, 'MLSNumber': 'MLS0000002'},
+#           {'Price': 319500.0, 'MLSNumber': 'MLS0000003'},
+#           {'Price': 275900.0, 'MLSNumber': 'MLS0000004'},
+#           {'Price': 239900.0, 'MLSNumber': 'MLS0000005'},
+#           {'Price': 339900.0, 'MLSNumber': 'MLS0000006'},
+#           {'Price': 249900.0, 'MLSNumber': 'MLS0000007'},
+#           {'Price': 219900.0, 'MLSNumber': 'MLS0000008'},
+#           {'Price': 579900.0, 'MLSNumber': 'MLS0000009'},
+#           {'Price': 209900.0, 'MLSNumber': 'MLS0000010'}]}
+
+```
+
+You may optionally use the limit and offset parameters to page the data that you want to download. This allows you to break large downloads into smaller pieces.
+
+```python
+# A broad RETS query
+rets_query=(PropertyType=SFD,CON,MUL)
+
+# A list of the fields to be returned for each row
+fields_to_be_downloaded = ["MLSNumber", "Price"]
+
+# Use Limit and Offset to download rows matching the query a little at a time
+download_complete = False
+last_offset = 0
+while not download_complete:
+    data = rets.get_data(
+        resource='Property',
+        class_name='Property',
+        query=rets_query,
+        fields=fields_to_be_downloaded,
+        limit=10,                           # Specify how many rows to return at once
+        offset=last_offset                  # Specify where in the results to start
+    )
+
+    for row in data['rows']:
+        # Do something with the rows you downloaded here (save to a database, etc.)
+        pass
+
+    if data['more_rows']:
+        # Still more coming! Increment the offset to get the next set of rows
+        last_offset += 10
+    else:
+        # All rows matching the query have been downloaded
+        download_complete = True
+
+```
+
+If you just want a count of how many records match your query, you can use the .get_count() method instead of .get_data(). Note that .get_data() still provides a count in the response dictionary, so .get_count() is for situations where you want only the count with no other data returned. You do not specify fields, limit, or offset with .get_count().
+
+```python
+row_count = rets.get_count('Property', class_name='Property', query=rets_query)
+print(row_count)
+# 105
+```
+
+### Downloading Images
+To download images, use the get_object() method. The response dictionary for this method will include object data that can be written to a file. An order number is used to specify which image you want to download in situations where more than one object is available (this usually matches a reference to the image object in a RETS server's Media table).
+
+```python
+# Download some image data
+img_response = rets.get_object(resource='Property', obj_type='Photo', obj_id='MLS0000001', order_no=0)
+
+# Write the image (as bytes) to a file somewhere
+path = "/tmp/rets/images/MLS0000001_01.jpg"
+if img_response['ok']:
+    with open(path, 'wb') as f:
+        f.write(img_data['object_data'])
+
+```
