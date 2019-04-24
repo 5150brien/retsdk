@@ -47,7 +47,7 @@ password | Yes | RETS account password
 login_url | Yes | RETS server login URL
 auth_type | No | Authentication type (defaults to 'digest')
 rets_version | No | Specifies the RETS version to be used (defaults to 'RETS/1.7.2')
-user_agent | No | Specifies the client's user-agent (defaults to 'Mozilla/4.0')
+user_agent | No | Specifies the client's user-agent (defaults to 'RETSDK/1.0')
 
 ### Download Metadata
 

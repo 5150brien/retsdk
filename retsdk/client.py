@@ -15,7 +15,7 @@ class RETSConnection(object):
 
     def __init__(self, username='', password='', login_url='', 
                  auth_type='digest', rets_version='RETS/1.7.2',
-                                       user_agent='Mozilla/4.0'):
+                                       user_agent='RETSDK/1.0'):
         """
         Sets up a connection to a RETS server and loads account options
         """
