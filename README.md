@@ -51,14 +51,12 @@ user_agent | No | Specifies the client's user-agent (defaults to 'Mozilla/4.0')
 
 ### Download Metadata
 
-There are (usually) several tiers of metadata to consider in a RETS system. These are resource metadata, class metadata, table metadata, and lookup-type metadata. RETSDK has methods to work with each of them, but if you would like to view metadata right in your browser with no additional setup, you can also try [RETSMD](https://retsmd.com/).
+There are (usually) several tiers of metadata to consider in a RETS system. These are resource metadata, class metadata, table metadata, and lookup-type metadata. RETSDK has methods to work with each of them programmatically, but if you would like to view metadata right in your browser with no additional setup, you can also try [RETSMD](https://retsmd.com/).
 
 #### Resource Metadata
-
 Resource metadata is the top layer of metadata; it tells you what resources are accessible from your account. Use the get_resource_metadata() method to download resource metadata.
 
 ##### Arguments
-
 There are no arguments to specify with get_resource_metadata().
 
 ##### Example
@@ -126,19 +124,15 @@ pprint(response)
 
 ```
 
-
 #### Class Metadata
-
 Class metadata provides information about the classes in a resource. Use the get_class_metadata() method to get class metadata.
 
 ##### Arguments
-
 Argument Name | Required | Meaning
 ------------ | ------------- | -------------
 resource | No | The ID of a RETS resource. Defaults to 'Property'.
 
 ##### Example
-
 ```python
 class_metadata_response = rets.get_class_metadata(resource='Property')
 
@@ -159,18 +153,15 @@ pprint(class_metadata_response)
 ```
 
 #### Table Metadata
-
 Table metadata tells you about the specific fields available in a class. Use the get_table_metadata() method to get table metadata.
 
 ##### Arguments
-
 Argument Name | Required | Meaning
 ------------ | ------------- | -------------
 resource | No | The ID of a resource. Defaults to 'Property'.
 `_class` | No | The class name or system name of a class within a resource. Defaults to 'Listing'.
 
 ##### Example
-
 ```python
 table_metadata_response = rets.get_table_metadata(
     resource='Property', 
@@ -235,8 +226,10 @@ pprint(table_metadata_response)
 #           'UseSeparator': None}]}
 ```
 
-##### Arguments
+#### Lookup-Type Metadata
+The last type of metadata data to consider is lookup-type metdata. If a field in the table metadata has an interpretation of "Lookup", there is a list of specific values that the field can hold. Get this list of values with the get_lookup_type_metadata() method.
 
+##### Arguments
 Argument Name | Required | Meaning
 ------------ | ------------- | -------------
 resource | No | The ID of a resource. Defaults to 'Property'.
@@ -288,7 +281,7 @@ offset | No | An offset position that can be used with limit
 
 ##### Examples
 ```python
-# A simple query for all "SFD" PropertyTypes, returning only MLSNumber and Price
+# Query all "SFD" listings, return only MLSNumber and Price
 rets_query = "(PropertyType=SFD)"
 fields_to_be_downloaded = ["MLSNumber", "Price"]
 
@@ -325,17 +318,17 @@ You may optionally use the limit and offset parameters to page the data that you
 rets_query=(PropertyType=SFD,CON,MUL)
 fields_to_be_downloaded = ["MLSNumber", "Price"]
 
-# You can use limit and offset to create simple loops that handle big downloads
+# Use a loop to download 10 records at a time
 download_complete = False
 last_offset = 0
 while not download_complete:
     data = rets.get_data(
         resource='Property',
-        class_name='Property',
+        class_name='Listing',
         query=rets_query,
         fields=fields_to_be_downloaded,
-        limit=10,                           # How many rows are returned at once
-        offset=last_offset                  # Where to offset paged results
+        limit=10,
+        offset=last_offset
     )
 
     for row in data['rows']:
@@ -352,7 +345,6 @@ while not download_complete:
 ```
 
 #### Getting A Record Count without Returning Data
-
 If you just want a count of how many records match your query, you can use get_count() instead of get_data(). Get_count() will return an integer instead of a full response dictionary.
 
 You do not specify fields, limit, or offset with .get_count(), but otherwise it works just like get_data(). It is, in fact, just another wrapper for the RETS search transaction with the 'Count' parameter set differently.
@@ -384,7 +376,7 @@ write | No | A boolean value that can optionally be set to True if you would lik
 
 ##### Example
 ```python
-# Download some image data
+# Download an image (as bytes)
 img_response = rets.get_object(
     resource='Property',
     obj_type='Photo',
@@ -392,7 +384,7 @@ img_response = rets.get_object(
     order_no=0
 )
 
-# Write the image (as bytes) to a file somewhere
+# Write the image data to a file somewhere
 path = "/tmp/rets/images/MLS0000001_01.jpg"
 if img_response['ok']:
     with open(path, 'wb') as f:
@@ -401,6 +393,8 @@ if img_response['ok']:
 ```
 
 ### Exceptions
+RETSDK raises these exceptions when stuff goes wrong:
+
 Exception | Meaning
 ------------ | -------------
 retsdk.exceptions.AuthenticationError | Raised when an unsupported authentication type is specified by the auth_type parameter
