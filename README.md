@@ -2,6 +2,12 @@
 
 A Python SDK for the Real Estate Transaction Standard (RETS)
 
+## Installation
+
+```
+pip install retsdk
+```
+
 ## Usage
 
 ### Initialize a client
