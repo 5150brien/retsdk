@@ -126,7 +126,7 @@ class RETSConnection(object):
         response = self.__get_metadata(encoded_parameters)
         return response
 
-    def get_table_metadata(self, resource='Property', _class='Listing'):
+    def get_table_metadata(self, resource='Property', class_name='Listing'):
         """
         Gets the detailed field metadata for a specific class
 
@@ -139,7 +139,7 @@ class RETSConnection(object):
         :rtype: dict
         :return: Response dictionary with rows of field metadata for a class
         """
-        _id = resource + ':' + class_
+        _id = resource + ':' + class_name
         get_metadata_params = {
             'Type': 'METADATA-TABLE',
             'ID': _id,
