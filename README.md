@@ -54,8 +54,9 @@ user_agent | String | No | Specifies the user-agent (defaults to 'RETSDK/1.0')
 There are (usually) several tiers of metadata to consider in a RETS system. These are resource metadata, class metadata, table metadata, and lookup-type metadata. RETSDK has methods to work with each of these programmatically, but if you would like to view metadata right in your browser with no additional setup, you can also try [RETSMD](https://retsmd.com/).
 
 All of the metadata query methods return a response dictionary with the following items:
+
 Key | Meaning | Value 
------------- | -------------
+------------ | ------------- | -------------
 more_rows | Indicates whether there are more rows to download | Boolean
 ok | Indicates whether the process completed successfully | Boolean
 record_count | The number of rows returned | Integer
@@ -279,8 +280,9 @@ pprint(lookup_type_metadata_response)
 Download data or search through records using the get_data() method. You will need to specify a query (using DMQL) and a list of the fields that you would like to have returned to you (see *Download Metadata* to learn how to find out what fields are available).
 
 get_data() returns a response dictionary with the following items:
+
 Key | Meaning | Value Type
------------- | -------------
+------------ | ------------- | -------------
 more_rows | Indicates whether there are more rows to download for the current query | Boolean
 ok | Indicates whether the query was processed successfully | Boolean
 record_count | The number of rows returned | Integer
@@ -389,6 +391,7 @@ Use the get_object() method to download images. This method is a wrapper for the
 get_object() returns a response dictionary, but it will not contain 'rows', 'record_count' or 'more_rows' key-value pairs that are included in get_data() and metadata responses. Instead, it will contain an item called 'object_data', where the actual object bytes that were returned by the server will be stored. RETS servers normally do not reply to GetObject transactions with a reply code and reply text when the transaction is successful... but that's just silly, so get_object() will always return these for consistency.
 
 The get_object() response dictionary:
+
 Key | Meaning | Value Type
 ------------ | ------------- | ------------- 
 ok | Indicates whether the object download was successful | Boolean
@@ -429,6 +432,7 @@ if img_response['ok']:
 If you would like to, you can close your RETS session with the logout() method.
 
 The logout() response dictionary:
+
 Key | Meaning | Value Type
 ------------ | ------------- | -------------
 more_rows | Indicates whether there are more rows to download for the current transaction | Boolean
