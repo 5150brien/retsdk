@@ -48,26 +48,27 @@ auth_type | String | No | Authentication type (defaults to 'digest')
 rets_version | String | No | Specifies the RETS version to be used (defaults to 'RETS/1.7.2')
 user_agent | String | No | Specifies the user-agent (defaults to 'RETSDK/1.0')
 
+
 ### Download Metadata
 
 There are (usually) several tiers of metadata to consider in a RETS system. These are resource metadata, class metadata, table metadata, and lookup-type metadata. RETSDK has methods to work with each of these programmatically, but if you would like to view metadata right in your browser with no additional setup, you can also try [RETSMD](https://retsmd.com/).
+
+All of the metadata query methods return a response dictionary with the following items:
+Key | Meaning | Value 
+------------ | -------------
+more_rows | Indicates whether there are more rows to download | Boolean
+ok | Indicates whether the process completed successfully | Boolean
+record_count | The number of rows returned | Integer
+reply_code | The server's RETS reply code | Integer
+reply_text | The message accompanying the RETS reply code | String
+rows | The metadata records returned by the server | List
+
 
 #### 1. Resource Metadata
 Resource metadata is the top layer of metadata; it tells you what resources are accessible from your account. Use the get_resource_metadata() method to download resource metadata.
 
 ##### Arguments
 None
-
-##### Response Dictionary
-get_resource_metadata() returns a dictionary that contains the following items:
-
-Key | Value 
------------- | -------------
-more_rows | Boolean value indicating whether there is more data to download for the current query
-record_count | An Integer representing the number of rows returned
-reply_code | An Integer representation of the server's RETS reply code
-reply_text | The text message accompanying the RETS reply code
-rows | A list of the resource metadata records returned by the server. Each record in the list is a Dictionary.
 
 ##### Example
 ```python
@@ -272,11 +273,21 @@ pprint(lookup_type_metadata_response)
 #           'Value': 'MUL'}]}
 ```
 
+
 ### Download Data
 
 Download data or search through records using the get_data() method. You will need to specify a query (using DMQL) and a list of the fields that you would like to have returned to you (see *Download Metadata* to learn how to find out what fields are available).
 
-The get_data() method is a wrapper for the RETS Search Transaction.
+get_data() returns a response dictionary with the following items:
+Key | Meaning | Value Type
+------------ | -------------
+more_rows | Indicates whether there are more rows to download for the current query | Boolean
+ok | Indicates whether the query was processed successfully | Boolean
+record_count | The number of rows returned | Integer
+reply_code | The server's RETS reply code | Integer
+reply_text | The message accompanying the RETS reply code | String
+rows | The actual records returned by the query | List
+
 
 ##### Arguments
 Argument Name | Required | Meaning
@@ -371,8 +382,19 @@ print(row_count)
 # 105
 ```
 
+
 ### Download Images
-Use the get_object() method to download images. The response dictionary for this method will include object data that can be written to a file.
+Use the get_object() method to download images. This method is a wrapper for the RETS specification's GetObject transaction..
+
+get_object() returns a response dictionary, but it will not contain 'rows', 'record_count' or 'more_rows' key-value pairs that are included in get_data() and metadata responses. Instead, it will contain an item called 'object_data', where the actual object bytes that were returned by the server will be stored. RETS servers normally do not reply to GetObject transactions with a reply code and reply text when the transaction is successful... but that's just silly, so get_object() will always return these for consistency.
+
+The get_object() response dictionary:
+Key | Meaning | Value Type
+------------ | ------------- | ------------- 
+ok | Indicates whether the object download was successful | Boolean
+reply_code | The server's RETS reply code | Integer
+reply_text | The message accompanying the RETS reply code | String
+object_data | The object data payload | Bytes
 
 ##### Arguments
 Argument Name | Required | Meaning
@@ -400,6 +422,36 @@ if img_response['ok']:
     with open(path, 'wb') as f:
         f.write(img_data['object_data'])
 
+```
+
+
+### Logout
+If you would like to, you can close your RETS session with the logout() method.
+
+The logout() response dictionary:
+Key | Meaning | Value Type
+------------ | ------------- | -------------
+more_rows | Indicates whether there are more rows to download for the current transaction | Boolean
+ok | Indicates whether the transaction was successful | Boolean
+record_count | The number of rows returned | Integer
+reply_code | The server's RETS reply code | Integer
+reply_text | The message accompanying the RETS reply code | String
+rows | The actual records returned by the logout transaction | List
+
+##### Arguments
+None
+
+##### Example
+```python
+logout_response = rets.logout()
+
+pprint(logout_response)
+# {'more_rows': False,
+#  'ok': True,
+#  'record_count': 1,
+#  'reply_code': '0',
+#  'reply_text': 'Operation Success.',
+#  'rows': [{'SignOffMessage': 'Connection Closed'}]}
 ```
 
 ### Exceptions
