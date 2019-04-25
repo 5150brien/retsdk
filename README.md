@@ -87,56 +87,32 @@ pprint(response)
 #           'ClassDate': '2015-01-28T21:06:04Z',
 #           'ClassVersion': '1.00.00001',
 #           'Description': 'Agent',
-#           'EditMaskDate': '2014-03-21T17:15:05Z',
-#           'EditMaskVersion': '1.00.00000',
 #           'KeyField': 'sysid',
 #           'LookupDate': '2015-01-21T17:31:54Z',
 #           'LookupVersion': '1.00.00001',
 #           'ObjectDate': '2014-03-21T17:15:24Z',
 #           'ObjectVersion': '1.00.00001',
 #           'ResourceID': 'Agent',
-#           'SearchHelpDate': '2015-03-21T17:15:05Z',
-#           'SearchHelpVersion': '1.00.00001',
 #           'StandardName': 'Agent',
 #           'TableName': 'Agent',
-#           'UpdateHelpDate': '2014-03-21T17:15:05Z',
-#           'UpdateHelpVersion': '1.00.00001',
-#           'ValidationExpressionDate': '2014-03-21T17:15:05Z',
-#           'ValidationExpressionVersion': '1.00.00001',
-#           'ValidationExternalDate': '2014-03-21T17:15:05Z',
-#           'ValidationExternalVersion': '1.00.00001',
-#           'ValidationLookupDate': '2014-03-21T17:15:05Z',
-#           'ValidationLookupVersion': '1.00.00001',
 #           'VisibleName': 'Agent'},
 #          {'ClassCount': 1,
 #           'ClassDate': '2015-01-28T16:19:02Z',
 #           'ClassVersion': '1.00.00001',
 #           'Description': 'Listing',
-#           'EditMaskDate': '2015-01-28T14:34:35Z',
-#           'EditMaskVersion': '1.00.00001',
 #           'KeyField': 'sysid',
 #           'LookupDate': '2015-01-28T14:34:35Z',
 #           'LookupVersion': '1.00.00001',
 #           'ObjectDate': '2015-01-28T14:34:35Z',
 #           'ObjectVersion': '1.00.00001',
 #           'ResourceID': 'Property',
-#           'SearchHelpDate': '2015-01-28T14:34:35Z',
-#           'SearchHelpVersion': '1.00.00001',
 #           'StandardName': 'Property',
 #           'TableName': 'Listing',
-#           'UpdateHelpDate': '2015-01-28T14:34:35Z',
-#           'UpdateHelpVersion': '1.00.00001',
-#           'ValidationExpressionDate': '2015-01-28T14:34:35Z',
-#           'ValidationExpressionVersion': '1.00.00001',
-#           'ValidationExternalDate': '2015-01-28T14:34:35Z',
-#           'ValidationExternalVersion': '1.00.00001',
-#           'ValidationLookupDate': '2015-01-28T14:34:35Z',
-#           'ValidationLookupVersion': '1.00.00001',
 #           'VisibleName': 'Listing'}]}
 
 ```
 
-#### Class Metadata
+#### 2. Class Metadata
 Class metadata provides information about the classes in a resource. Use the get_class_metadata() method to get class metadata.
 
 ##### Arguments
@@ -164,7 +140,7 @@ pprint(class_metadata_response)
 #           'VisibleName': 'Cross Property'}]}
 ```
 
-#### Table Metadata
+#### 3. Table Metadata
 Table metadata tells you about the specific fields available in a class. Use the get_table_metadata() method to get table metadata.
 
 ##### Arguments
@@ -238,7 +214,7 @@ pprint(table_metadata_response)
 #           'UseSeparator': None}]}
 ```
 
-#### Lookup-Type Metadata
+#### 4. Lookup-Type Metadata
 The last type of metadata data to consider is lookup-type metdata. If a field in the table metadata has an interpretation of "Lookup", there is a list of specific values that the field can hold. Get this list of values with the get_lookup_type_metadata() method.
 
 ##### Arguments
@@ -279,18 +255,6 @@ pprint(lookup_type_metadata_response)
 
 Download data or search through records using the get_data() method. You will need to specify a query (using DMQL) and a list of the fields that you would like to have returned to you (see *Download Metadata* to learn how to find out what fields are available).
 
-get_data() returns a response dictionary with the following items:
-
-Key | Meaning | Value Type
------------- | ------------- | -------------
-more_rows | Indicates whether there are more rows to download for the current query | Boolean
-ok | Indicates whether the query was processed successfully | Boolean
-record_count | The number of rows returned | Integer
-reply_code | The server's RETS reply code | Integer
-reply_text | The message accompanying the RETS reply code | String
-rows | The actual records returned by the query | List
-
-
 ##### Arguments
 Argument Name | Required | Meaning
 ------------ | ------------- | -------------
@@ -302,9 +266,19 @@ data_format | No | The RETS data format to be used with fields. Defaults to 'COM
 limit | No | The maximum number of records to return
 offset | No | An offset position that can be used with limit
 
+##### Response Dictionary
+Key | Meaning | Value Type
+------------ | ------------- | -------------
+more_rows | Indicates whether there are more rows to download for the current query | Boolean
+ok | Indicates whether the query was processed successfully | Boolean
+record_count | The number of rows returned | Integer
+reply_code | The server's RETS reply code | Integer
+reply_text | The message accompanying the RETS reply code | String
+rows | The actual records returned by the query | List
+
 ##### Examples
 ```python
-# Query all "SFD" listings, return only MLSNumber and Price
+# Query all listings with "SFD" PropertyType, return only MLSNumber and Price
 rets_query = "(PropertyType=SFD)"
 fields_to_be_downloaded = ["MLSNumber", "Price"]
 
@@ -368,9 +342,9 @@ while not download_complete:
 ```
 
 #### Getting A Record Count without Returning Data
-If you just want a count of how many records match your query, you can use get_count() instead of get_data(). Get_count() will return an integer instead of a full response dictionary.
+If you just want a count of how many records match your query, you can use get_count() instead of get_data(). get_count() will return an integer instead of a full response dictionary.
 
-You do not specify fields, limit, or offset with .get_count(), but otherwise it works just like get_data(). It is, in fact, just another wrapper for the RETS search transaction with the 'Count' parameter set differently.
+You do not specify fields, limit, or offset with get_count(), but otherwise it works just like get_data(). It is, in fact, just another wrapper for the RETS Search transaction with the *Count* parameter set differently.
 
 ##### Example
 ```python
@@ -386,18 +360,9 @@ print(row_count)
 
 
 ### Download Images
-Use the get_object() method to download images. This method is a wrapper for the RETS specification's GetObject transaction..
+Use the get_object() method to download images. This method is a wrapper for the RETS specification's GetObject transaction.
 
-get_object() returns a response dictionary, but it will not contain 'rows', 'record_count' or 'more_rows' key-value pairs that are included in get_data() and metadata responses. Instead, it will contain an item called 'object_data', where the actual object bytes that were returned by the server will be stored. RETS servers normally do not reply to GetObject transactions with a reply code and reply text when the transaction is successful... but that's just silly, so get_object() will always return these for consistency.
-
-The get_object() response dictionary:
-
-Key | Meaning | Value Type
------------- | ------------- | ------------- 
-ok | Indicates whether the object download was successful | Boolean
-reply_code | The server's RETS reply code | Integer
-reply_text | The message accompanying the RETS reply code | String
-object_data | The object data payload | Bytes
+get_object() returns a response dictionary, but the dictionary does not contain 'rows', 'record_count' or 'more_rows'. Instead, it will contain an item called 'object_data', where the actual object data will be stored as bytes.
 
 ##### Arguments
 Argument Name | Required | Meaning
@@ -408,6 +373,15 @@ obj_id | Yes | The system ID of the record associated with object.
 order_no | No | The order number of the image or other object (for situations where there are multiple images associated with one listing)
 path | No | A file system path where image data should be written (used only when write=True).
 write | No | A boolean value that can optionally be set to True if you would like get_object() to write image/object data to a file for you. You must specifiy a path if you wish to use this option.
+
+##### Response Dictionary:
+
+Key | Meaning | Value Type
+------------ | ------------- | ------------- 
+ok | Indicates whether the object download was successful | Boolean
+reply_code | The server's RETS reply code | Integer
+reply_text | The message accompanying the RETS reply code | String
+object_data | The object data payload | Bytes
 
 ##### Example
 ```python
@@ -431,8 +405,10 @@ if img_response['ok']:
 ### Logout
 If you would like to, you can close your RETS session with the logout() method.
 
-The logout() response dictionary:
+##### Arguments
+None
 
+##### Response Dictionary:
 Key | Meaning | Value Type
 ------------ | ------------- | -------------
 more_rows | Indicates whether there are more rows to download for the current transaction | Boolean
@@ -441,9 +417,6 @@ record_count | The number of rows returned | Integer
 reply_code | The server's RETS reply code | Integer
 reply_text | The message accompanying the RETS reply code | String
 rows | The actual records returned by the logout transaction | List
-
-##### Arguments
-None
 
 ##### Example
 ```python
@@ -464,7 +437,7 @@ RETSDK raises these exceptions when stuff goes wrong:
 Exception | Meaning
 ------------ | -------------
 retsdk.exceptions.AuthenticationError | Raised when an unsupported authentication type is specified by the auth_type parameter
-retsdk.exceptions.RequestError | Raised if authentication fails because of invalid account credentials or an incorrect login URL
+retsdk.exceptions.RequestError | Raised if a RETS transaction request cannot be completed
 retsdk.excpetions.TransactionError | Raised if the user attempts to perform a transaction that is not supported by the current RETS account.
 
 
