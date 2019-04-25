@@ -397,7 +397,7 @@ img_response = rets.get_object(
 path = "/tmp/rets/images/MLS0000001_01.jpg"
 if img_response['ok']:
     with open(path, 'wb') as f:
-        f.write(img_data['object_data'])
+        f.write(img_response['object_data'])
 
 ```
 
@@ -436,8 +436,8 @@ RETSDK raises these exceptions when stuff goes wrong:
 
 Exception | Meaning
 ------------ | -------------
-retsdk.exceptions.AuthenticationError | Raised when an unsupported authentication type is specified by the auth_type parameter
+retsdk.exceptions.AuthenticationError | Raised when an unsupported authentication type is specified during intialization
 retsdk.exceptions.RequestError | Raised if a RETS transaction request cannot be completed
-retsdk.excpetions.TransactionError | Raised if the user attempts to perform a transaction that is not supported by the current RETS account.
+retsdk.exceptions.TransactionError | Raised if the user attempts to perform a transaction that is not supported by the current RETS account.
 
 
