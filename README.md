@@ -6,7 +6,7 @@ A Python SDK for the Real Estate Transaction Standard (RETS)
 
 ### Initialize a client
 
-Create a new RETSConnection instance to connect to a RETS server and load account options.
+Create a new RETSConnection instance to connect to a RETS server.
 
 ##### Example
 ```python
@@ -39,25 +39,35 @@ print(rets.get_object_url)
 ```
 
 #### Initialization Arguments
-
-Argument Name | Required | Meaning
------------- | ------------- | -------------
-username | Yes | RETS account username
-password | Yes | RETS account password
-login_url | Yes | RETS server login URL
-auth_type | No | Authentication type (defaults to 'digest')
-rets_version | No | Specifies the RETS version to be used (defaults to 'RETS/1.7.2')
-user_agent | No | Specifies the client's user-agent (defaults to 'RETSDK/1.0')
+Argument | Type | Required | Meaning
+------------ | ------------- | ------------- | -------------
+username | String | Yes | RETS account username
+password | String | Yes | RETS account password
+login_url | String | Yes | RETS server login URL
+auth_type | String | No | Authentication type (defaults to 'digest')
+rets_version | String | No | Specifies the RETS version to be used (defaults to 'RETS/1.7.2')
+user_agent | String | No | Specifies the user-agent (defaults to 'RETSDK/1.0')
 
 ### Download Metadata
 
-There are (usually) several tiers of metadata to consider in a RETS system. These are resource metadata, class metadata, table metadata, and lookup-type metadata. RETSDK has methods to work with each of them programmatically, but if you would like to view metadata right in your browser with no additional setup, you can also try [RETSMD](https://retsmd.com/).
+There are (usually) several tiers of metadata to consider in a RETS system. These are resource metadata, class metadata, table metadata, and lookup-type metadata. RETSDK has methods to work with each of these programmatically, but if you would like to view metadata right in your browser with no additional setup, you can also try [RETSMD](https://retsmd.com/).
 
-#### Resource Metadata
+#### 1. Resource Metadata
 Resource metadata is the top layer of metadata; it tells you what resources are accessible from your account. Use the get_resource_metadata() method to download resource metadata.
 
 ##### Arguments
-There are no arguments to specify with get_resource_metadata().
+None
+
+##### Response Dictionary
+get_resource_metadata() returns a dictionary that contains the following items:
+
+Key | Value 
+------------ | -------------
+more_rows | Boolean value indicating whether there is more data to download for the current query
+record_count | An Integer representing the number of rows returned
+reply_code | An Integer representation of the server's RETS reply code
+reply_text | The text message accompanying the RETS reply code
+rows | A list of the resource metadata records returned by the server. Each record in the list is a Dictionary.
 
 ##### Example
 ```python
