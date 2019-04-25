@@ -38,7 +38,7 @@ print(rets.get_object_url)
 # https://rets.somemls.com/rets/GetObject/
 ```
 
-#### Initialization Arguments
+##### Initialization Arguments
 Argument | Type | Required | Meaning
 ------------ | ------------- | ------------- | -------------
 username | String | Yes | RETS account username
@@ -66,7 +66,7 @@ rows | The metadata records returned by the server | List
 
 
 #### 1. Resource Metadata
-Resource metadata is the top layer of metadata; it tells you what resources are accessible from your account. Use the get_resource_metadata() method to download resource metadata.
+Resource metadata is the top layer of metadata; it tells you what resources are accessible from your account. Use the **get_resource_metadata()** method to download resource metadata.
 
 ##### Arguments
 None
@@ -113,7 +113,7 @@ pprint(response)
 ```
 
 #### 2. Class Metadata
-Class metadata provides information about the classes in a resource. Use the get_class_metadata() method to get class metadata.
+Class metadata provides information about the classes in a resource. Use the **get_class_metadata()** method to get class metadata.
 
 ##### Arguments
 Argument Name | Required | Meaning
@@ -141,7 +141,7 @@ pprint(class_metadata_response)
 ```
 
 #### 3. Table Metadata
-Table metadata tells you about the specific fields available in a class. Use the get_table_metadata() method to get table metadata.
+Table metadata tells you about the specific fields available in a class. Use the **get_table_metadata()** method to get table metadata.
 
 ##### Arguments
 Argument Name | Required | Meaning
@@ -211,7 +211,7 @@ pprint(table_metadata_response)
 ```
 
 #### 4. Lookup-Type Metadata
-The last type of metadata data to consider is lookup-type metdata. If a field in the table metadata has an interpretation of "Lookup", there is a list of specific values that the field can hold. Get this list of values with the get_lookup_type_metadata() method.
+The last type of metadata data to consider is lookup-type metdata. If a field in the table metadata has an interpretation of "Lookup", there is a list of specific values that the field can hold. Get this list of values with the **get_lookup_type_metadata()** method.
 
 ##### Arguments
 Argument Name | Required | Meaning
@@ -249,7 +249,7 @@ pprint(lookup_type_metadata_response)
 
 ### Download Data
 
-Download data or search through records using the get_data() method. You will need to specify a query (using DMQL) and a list of the fields that you would like to have returned to you (see *Download Metadata* to learn how to find out what fields are available).
+Download data or search through records using the **get_data()** method. You will need to specify a query (using DMQL) and a list of the fields that you would like to have returned to you (see *Download Metadata* to learn how to find out what fields are available).
 
 ##### Arguments
 Argument Name | Required | Meaning
@@ -304,7 +304,7 @@ pprint(data)
 
 ```
 
-You may optionally use the limit and offset parameters to page the data that you want to download. This allows you to break large downloads into smaller pieces.
+You may optionally use the **limit** and **offset** parameters to page the data that you want to download. This allows you to break large downloads into smaller pieces.
 
 ```python
 # A broader RETS query that might returns lots of records
@@ -337,8 +337,8 @@ while not download_complete:
 
 ```
 
-#### Getting A Record Count without Returning Data
-If you just want a count of how many records match your query, you can use get_count() instead of get_data(). get_count() will return an integer instead of a full response dictionary.
+#### Getting a Record Count without Returning Data
+If you just want a count of how many records match your query, you can use **get_count()** instead of get_data(). get_count() will return an integer instead of a full response dictionary.
 
 You do not specify fields, limit, or offset with get_count(), but otherwise it works just like get_data(). It is, in fact, just another wrapper for the RETS Search transaction with the *Count* parameter set differently.
 
@@ -356,7 +356,7 @@ print(row_count)
 
 
 ### Download Images
-Use the get_object() method to download images. This method is a wrapper for the RETS specification's GetObject transaction.
+Use the **get_object()** method to download images. This method is a wrapper for the RETS specification's GetObject transaction.
 
 get_object() returns a response dictionary, but the dictionary does not contain 'rows', 'record_count' or 'more_rows'. Instead, it will contain an item called 'object_data', where the actual object data will be stored as bytes.
 
@@ -399,7 +399,7 @@ if img_response['ok']:
 
 
 ### Logout
-If you would like to, you can close your RETS session with the logout() method.
+If you would like to, you can close your RETS session with the **logout()** method.
 
 ##### Arguments
 None
