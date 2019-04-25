@@ -147,13 +147,13 @@ Table metadata tells you about the specific fields available in a class. Use the
 Argument Name | Required | Meaning
 ------------ | ------------- | -------------
 resource | No | The ID of a resource. Defaults to 'Property'.
-`_class` | No | The class name or system name of a class within a resource. Defaults to 'Listing'.
+class_name | No | The class name or system name of a class within a resource. Defaults to 'Listing'.
 
 ##### Example
 ```python
 table_metadata_response = rets.get_table_metadata(
     resource='Property', 
-    _class='Listing'
+    class_name='Listing'
 )
 
 pprint(table_metadata_response)
