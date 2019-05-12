@@ -101,15 +101,23 @@ def split_line(xml_line_text):
     :rtype: list
     :return: a list of values from xml_line_text
     """
+    def handle_delimiter(text, delimiter):
+        if text[0] == delimiter and text[-1] == delimiter:
+            # Fully delimited values
+            return text.split(delimiter)[1:-1]
+        else:
+            # No leading/trailing delimiter
+            return text.strip().split(delimiter)
+
     if '\x09' in xml_line_text:
         # Search Transactions
-        return xml_line_text.strip().split('\x09')
+        return handle_delimiter(xml_line_text, '\x09')
     elif '\t' in xml_line_text:
         # Metadata Transactions
-        return xml_line_text.strip().split('\t')
+        return handle_delimiter(xml_line_text, '\t')
     elif '\n' in xml_line_text.strip():
         # Login/Logout Transactions
-        return xml_line_text.strip().split('\n')
+        return handle_delimiter(xml_line_text, '\n')
     return  [xml_line_text.strip()]
 
 def map_fields(columns, line):
