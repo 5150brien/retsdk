@@ -387,10 +387,10 @@ class RETSConnection(object):
 
         try:
             r = request.urlopen(rets_request)
-            content_type = r.headers['Content-Type']
+            content_type = r.headers['Content-Type'].lower().replace(' ', '')
             payload = r.read()
 
-            if content_type == 'text/xml; charset=utf-8':
+            if content_type == 'text/xml;charset=utf-8':
                 xml = ET.fromstring(payload)
                 response = parse_response(xml)
             elif content_type == 'image/jpeg':
