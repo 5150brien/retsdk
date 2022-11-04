@@ -2,8 +2,9 @@ import xml.etree.ElementTree as ET
 import urllib.request as request
 from urllib.parse import urlparse, urlencode
 from urllib.error import HTTPError, URLError
-from http.client import IncompleteRead
 from socket import timeout
+from http.client import IncompleteRead
+from http.cookiejar import CookieJar
 import time
 import sys
 
@@ -25,23 +26,28 @@ class RETSConnection(object):
         # Get a base URL from the login URL
         parsed_url = urlparse(login_url)
         if parsed_url.scheme and parsed_url.netloc:
-            base_url = parsed_url.scheme + "://" + parsed_url.netloc
+            self.base_url = parsed_url.scheme + "://" + parsed_url.netloc
         else:
             url_msg = "{0} is not a valid RETS Login URL".format(login_url)
             raise AuthenticationError(url_msg)
 
-        # Setup an opener that can handle authentication
+        # Setup an authentication handler
         pw_mgr = request.HTTPPasswordMgrWithDefaultRealm()
-        pw_mgr.add_password(None, base_url, username, password)
+        pw_mgr.add_password(None, self.base_url, username, password)
 
         if auth_type == 'digest':
-            handler = request.HTTPDigestAuthHandler(pw_mgr)
+            auth_handler = request.HTTPDigestAuthHandler(pw_mgr)
         elif auth_type == 'basic':
-            handler = request.HTTPBasicAuthHandler(pw_mgr)
+            auth_handler = request.HTTPBasicAuthHandler(pw_mgr)
         else:
             raise AuthenticationError("auth_type must be 'basic' or 'digest'")
 
-        opener = request.build_opener(handler)
+        # Setup a cookie handler (for systems that use session auth)
+        cookiejar = CookieJar()
+        cookie_handler = request.HTTPCookieProcessor(cookiejar)
+
+        # Build an opener with the auth/cookie handlers
+        opener = request.build_opener(auth_handler, cookie_handler)
         request.install_opener(opener)
 
         # Perform a login request to get server & account info
@@ -50,25 +56,36 @@ class RETSConnection(object):
         for option in login_response['rows']:
             for key, val in option.items():
                 if key == 'MetadataVersion':
-                    self.metadata_version = val
+                    self.metadata_version = self.__set_url(path=val)
                 if key == 'MetadataTimestamp':
-                    self.metadata_timestamp = val
+                    self.metadata_timestamp = self.__set_url(path=val)
                 if key == 'MinMetadataTimestamp':
-                    self.min_metadata_timestamp = val
+                    self.min_metadata_timestamp = self.__set_url(path=val)
                 if key == 'Login':
-                    self.login_url = val
+                    self.login_url = self.__set_url(path=val)
                 if key == 'Logout':
-                    self.logout_url = val
+                    self.logout_url = self.__set_url(path=val)
                 if key == 'Search':
-                    self.search_url = val
+                    self.search_url = self.__set_url(path=val)
                 if key == 'GetMetadata':
-                    self.get_metadata_url = val
+                    self.get_metadata_url = self.__set_url(path=val)
                 if key == 'GetObject':
-                    self.get_object_url = val
+                    self.get_object_url = self.__set_url(path=val)
                 if key == 'Update':
-                    self.update_url = val
+                    self.update_url = self.__set_url(path=val)
                 if key == 'PostObject':
-                    self.post_object_url = val
+                    self.post_object_url = self.__set_url(path=val)
+
+    def __set_url(self, path):
+        """
+        Assembles a complete URL from base and path, if necessary
+        """
+        complete_url = str()
+        if 'http' not in path:
+            complete_url = self.base_url + path
+        else:
+            complete_url = path
+        return complete_url
 
     def __login(self, login_url):
         """
