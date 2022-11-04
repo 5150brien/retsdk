@@ -40,7 +40,9 @@ def parse_response(xml):
     response['record_count'] = 0
     response['more_rows'] = False
 
-    if response['reply_text'] in ['Operation Success.', 'Operation successful']:
+    # Some implementations have operation "success" or "successful"
+    reply_text = response['reply_text'].lower().replace(".", "")
+    if reply_text in 'operation successful':
         if xml[0].tag == 'RETS-RESPONSE':
             # Login/Logout transactions (can come with options/messages)
             response_data = split_line(xml[0].text)
