@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="retsdk",
     version="1.0.1",
-    author="Devlin O'Brien",
+    author="D O'Brien",
     author_email="dobrien@my.ccsu.edu",
     license="MIT",
     keywords="rets real estate",
