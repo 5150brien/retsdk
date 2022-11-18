@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="retsdk",
-    version="1.0.1",
+    version="1.0.2",
     author="D O'Brien",
     author_email="dobrien@my.ccsu.edu",
     license="MIT",
